@@ -4,6 +4,7 @@ androidx-activity = "1.8.2"
 androidx-compose-bom = "2024.02.02"
 androidx-test-ext-junit = "1.1.5"
 kotlin = "1.8.10"
+robolectric = "4.11.1"
 
 
 [plugins]
@@ -21,6 +22,7 @@ androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-compose-ui-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
+robolectric-robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
 
 
 
