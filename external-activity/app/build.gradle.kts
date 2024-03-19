@@ -20,6 +20,7 @@ android {
         }
     }
 
+    testOptions.unitTests.isIncludeAndroidResources = true
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -60,6 +61,10 @@ dependencies {
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.uiautomator)
     androidTestImplementation(platform(libs.androidx.compose.bom))
+
+    testImplementation(libs.androidx.compose.ui.test.junit4)
+    testImplementation(libs.androidx.test.ext.junit)
+    testImplementation(libs.robolectric.robolectric)
 
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
