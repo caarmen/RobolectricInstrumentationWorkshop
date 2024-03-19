@@ -21,6 +21,12 @@ android {
     }
 
     testOptions.unitTests.isIncludeAndroidResources = true
+    sourceSets.named("test") {
+        java.srcDirs("src/sharedTest/kotlin")
+    }
+    sourceSets.named("androidTest") {
+        java.srcDirs("src/sharedTest/kotlin")
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
