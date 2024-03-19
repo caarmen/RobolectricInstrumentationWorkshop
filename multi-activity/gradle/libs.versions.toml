@@ -22,4 +22,5 @@ androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-compose-ui-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
+robolectric-annotations = { group = "org.robolectric", name = "annotations", version.ref = "robolectric" }
 robolectric-robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }

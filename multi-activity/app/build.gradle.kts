@@ -65,6 +65,7 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.robolectric.annotations)
     androidTestImplementation(platform(libs.androidx.compose.bom))
 
     testImplementation(libs.androidx.compose.ui.test.junit4)

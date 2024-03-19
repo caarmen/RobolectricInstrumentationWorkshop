@@ -11,6 +11,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.annotation.Config
 
 /*
  * This test can be run on the jvm, or as an instrumented test.
@@ -23,6 +24,7 @@ import org.junit.runner.RunWith
  * Instrumented test:
  * :app:connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class="com.example.multiactivity.MultiActivitySharedTest"
  */
+@Config(sdk=[33, 34])
 @RunWith(AndroidJUnit4::class)
 class MultiActivitySharedTest {
 
