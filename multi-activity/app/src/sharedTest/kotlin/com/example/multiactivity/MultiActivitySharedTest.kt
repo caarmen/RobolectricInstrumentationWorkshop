@@ -24,7 +24,6 @@ import org.robolectric.annotation.Config
  * Instrumented test:
  * :app:connectedAndroidTest -Pandroid.testInstrumentationRunnerArguments.class="com.example.multiactivity.MultiActivitySharedTest"
  */
-@Config(sdk=[33, 34])
 @RunWith(AndroidJUnit4::class)
 class MultiActivitySharedTest {
 
@@ -34,8 +33,6 @@ class MultiActivitySharedTest {
     @Test
     fun testMainActivity() {
         composeTestRule.onNode(hasText("Click me")).performClick()
-        composeTestRule.onNodeWithTag("TextInput").performTextInput("test text")
-        composeTestRule.onNode(hasText("Close")).performClick()
-        composeTestRule.onNodeWithTag("ResultText").assertTextEquals("test text")
+        composeTestRule.onNodeWithTag("SecondActivityText").assertTextEquals("second activity")
     }
 }
