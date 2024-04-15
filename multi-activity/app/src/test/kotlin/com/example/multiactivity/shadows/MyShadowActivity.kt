@@ -4,51 +4,59 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.test.core.app.ActivityScenario
-import org.robolectric.Shadows
+import org.robolectric.android.controller.ActivityController
 import org.robolectric.annotation.Implementation
 import org.robolectric.annotation.Implements
 import org.robolectric.shadow.api.Shadow
 import org.robolectric.shadows.ShadowActivity
-import org.robolectric.util.reflector.ForType
-import org.robolectric.util.reflector.Reflector
+import org.robolectric.util.ReflectionHelpers
 
 @Implements(Activity::class)
 class MyShadowActivity : ShadowActivity() {
-    private var nextActivityScenario: ActivityScenario<Activity>? = null
-    private var previousActivity: Activity? = null
+    var previousActivity: MyShadowActivity? = null
+    var scenario: ActivityScenario<Activity>? = null
+
+    // We need access to the controller field, but it's private in the super class.
+    // We'll make our own copy of the field in this class, and assign it when
+    // attachController is called.
+    private var controller: ActivityController<*>? = null
+
+    override fun <T : Activity?> attachController(controller: ActivityController<*>?) {
+        super.attachController<T>(controller)
+        this.controller = controller
+    }
 
     @Implementation
     fun startActivityForResult(intent: Intent, requestCode: Int, options: Bundle?) {
-        // Use reflection to call startActivityForResult on the real activity
-        // https://robolectric.org/javadoc/4.11/org/robolectric/util/reflector/Reflector.html
-        Reflector.reflector(_Activity_::class.java, realActivity)
-            .startActivityForResult(intent, requestCode, options)
-
-        // Manually launch the next activity.
-        // Save the next activity's scenario, to clean up its resources later.
-        nextActivityScenario = ActivityScenario.launchActivityForResult<Activity?>(intent).also {
-            it.onActivity { nextActivity: Activity? ->
-                Shadow.extract<MyShadowActivity>(nextActivity).previousActivity = realActivity
-            }
-        }
+        // Call through to the actual Activity.startActivityForResult()
+        Shadow.directlyOn<Unit>(
+            realActivity, Activity::class.java.name, "startActivityForResult",
+            ReflectionHelpers.ClassParameter(Intent::class.java, intent),
+            ReflectionHelpers.ClassParameter(Int::class.java, requestCode),
+            ReflectionHelpers.ClassParameter(Bundle::class.java, options),
+        )
+        // We need to pause this activity when launching the next activity
+        controller?.pause()
     }
 
-    @ForType(value = Activity::class, direct = true)
-    internal interface _Activity_ {
-        fun startActivityForResult(intent: Intent?, requestCode: Int, options: Bundle?)
-    }
+    private var isFinishing = false
 
     @Implementation
     public override fun finish() {
         super.finish()
-        nextActivityScenario?.close() // for MainActivity
 
-        previousActivity?.let { // for SecondActivity
-            Shadows.shadowOf(it).receiveResult(
-                realActivity.intent,
-                resultCode,
-                resultIntent
-            )
+        // If a previous activity started us, we should resume
+        // that previous activity, now that we're finishing.
+        previousActivity?.let {
+            it.controller?.resume()
+            it.receiveResult(realActivity.intent, resultCode, resultIntent)
+        }
+        // Close the scenario to free up resources.
+        // Need a variable isFinishing to avoid an infinite loop, as
+        // scenario.close() will trigger a call to finish().
+        if (!isFinishing) {
+            isFinishing = true
+            scenario?.close()
         }
     }
 }
